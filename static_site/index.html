@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Reconnaissance de chiffres</h1>
+        <canvas id="drawingCanvas" width="280" height="280" style="border:1px solid #000;"></canvas>
+        <br>
+        <button class="button" id="predictButton">Prédire</button>
+        <button class="button" id="clearButton">Effacer</button>
+        <p id="result">Résultat : </p>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.2/dist/ort.min.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
