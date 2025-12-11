@@ -54,11 +54,11 @@ function preprocessCanvas() {
     tctx.drawImage(canvas, 0, 0, 28, 28);
 
     const imageData = tctx.getImageData(0, 0, 28, 28).data;
-    // white -> 1, black -> 0 (no intermediate values)
     const pixels = new Float32Array(28 * 28);
+
     for (let i = 0, p = 0; i < imageData.length; i += 4, p++) {
-        const r = imageData[i];
-        pixels[p] = r > 0 ? 1 : 0; // anything >0 becomes 1, else 0
+        const r = imageData[i] / 255;
+        pixels[p] = (r - 0.1307) / 0.3081;
     }
 
     return new ort.Tensor('float32', pixels, [1, 1, 28, 28]);
