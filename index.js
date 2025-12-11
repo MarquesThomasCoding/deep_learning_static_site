@@ -71,23 +71,16 @@ async function predict() {
         const inputName = session.inputNames[0];
         const feeds = { [inputName]: inputTensor };
         const outputMap = await session.run(feeds);
-        console.log('Output Map:', Object.values(outputMap)[0]);
         const outputTensor = Object.values(outputMap)[0];
 
-        const minLogit = Math.min(...outputTensor.data);
-        const maxLogit = Math.max(...outputTensor.data);
-        const range = maxLogit - minLogit;
-
-        outputTensor.data.forEach((val, idx) => {
-            const normalized = (val - minLogit) / range;
-            console.log(`Digit ${idx}: Logit=${val.toFixed(4)}, Normalized=${(normalized * 100).toFixed(1)}%`);
-        });
+        const expSum = Array.from(outputTensor.data).reduce((sum, val) => sum + Math.exp(val), 0);
+        const confidence = (Math.exp(Math.max(...outputTensor.data)) / expSum * 100).toFixed(1);
 
         const predictedDigit = outputTensor.data.indexOf(Math.max(...outputTensor.data));
-        const normalizedValue = (outputTensor.data[predictedDigit] - minLogit) / range;
-        const pct = (normalizedValue * 100).toFixed(1);
 
-        resultElement.textContent = `Résultat : ${predictedDigit} (${pct}%)`;
+        console.log(`Predicted Digit: ${predictedDigit}, Confidence: ${confidence}%`);
+
+        resultElement.textContent = `Résultat : ${predictedDigit} (Confiance : ${confidence}%)`;
     } catch (error) {
         console.error('Erreur lors de la prédiction :', error);
         resultElement.textContent = 'Erreur lors de la prédiction';
