@@ -74,9 +74,15 @@ async function predict() {
         const outputTensor = Object.values(outputMap)[0];
 
         const expSum = Array.from(outputTensor.data).reduce((sum, val) => sum + Math.exp(val), 0);
-        const confidence = (Math.exp(Math.max(...outputTensor.data)) / expSum * 100).toFixed(1);
-
+        
+        const confidences = Array.from(outputTensor.data).map((val, idx) => {
+            const conf = (Math.exp(val) / expSum * 100).toFixed(1);
+            console.log(`Digit ${idx}: ${conf}%`);
+            return conf;
+        });
+        
         const predictedDigit = outputTensor.data.indexOf(Math.max(...outputTensor.data));
+        const confidence = confidences[predictedDigit];
 
         console.log(`Predicted Digit: ${predictedDigit}, Confidence: ${confidence}%`);
 
